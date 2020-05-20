@@ -8,9 +8,10 @@ const verificarToken = require('../authentication/verificarToken');
 //Usuario
 router.post('/loginUsuario',rutasUsuario);
 //Producto
-router.post('/obtenerProductos',rutasProducto);
+router.post('/obtenerProductos',rutasProducto.obtenerProductos);
+router.post('/crearProducto',rutasProducto.crearProducto);
 //Cientes
-router.post('/obtenerClientes',rutasCliente);
-
+router.post('/obtenerClientes',rutasCliente.obtenerClientes);
+router.post('/crearCliente',rutasCliente.crearCliente);
 
 module.exports = router;
