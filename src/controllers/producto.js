@@ -27,21 +27,21 @@ const obtenerProductos = async (req, res) => {
 
 
 const crearProducto = async (req, res) => {
-    createdAt=new Date();
-    updatedAt=new Date();
-    const {emisor_id,impuesto_iva_id,codigoPrincipal,codigoAuxiliar,nombre,precioUnitario,createdBy_id,updatedBy_id  } = req.body;
-    mysqlConnection.query('insert into producto (emisor_id,impuesto_iva_id,codigoPrincipal,codigoAuxiliar,nombre,precioUnitario,createdBy_id,updatedBy_id,createdAt,updatedAt )  values  (?,?,?,?,?,?,?,?,?,?)', [emisor_id,impuesto_iva_id,codigoPrincipal,codigoAuxiliar,nombre,precioUnitario,createdBy_id,updatedBy_id,createdAt,updatedAt ], (err, rows, fields) => {
+    createdAt = new Date();
+    updatedAt = new Date();
+    const { emisor_id, impuesto_iva_id, codigoPrincipal, codigoAuxiliar, nombre, precioUnitario, createdBy_id, updatedBy_id } = req.body;
+    mysqlConnection.query('insert into producto (emisor_id,impuesto_iva_id,codigoPrincipal,codigoAuxiliar,nombre,precioUnitario,createdBy_id,updatedBy_id,createdAt,updatedAt )  values  (?,?,?,?,?,?,?,?,?,?)', [emisor_id, impuesto_iva_id, codigoPrincipal, codigoAuxiliar, nombre, precioUnitario, createdBy_id, updatedBy_id, createdAt, updatedAt], (err, rows, fields) => {
         if (!err) {
-           
-                autorizacion=""
-                rows.mensaje="Producto creado correctamente";
-                estado = 200;
-                mensaje = 'Producto creado correctamente';
-                res.status(estado).json(obtenerJsonRes(mensaje, autorizacion, rows));
-          
+
+            autorizacion = ""
+            rows.mensaje = "Producto creado correctamente";
+            estado = 200;
+            mensaje = 'Producto creado correctamente';
+            res.status(estado).json(obtenerJsonRes(mensaje, autorizacion, rows));
+
         } else {
             console.log(err)
-            autorizacion=""
+            autorizacion = ""
             estado = 400;
             mensaje = 'Error: Los datos del Producto son incorrectos.';
             res.status(estado).json(obtenerJsonRes(mensaje, autorizacion, rows));
@@ -53,7 +53,7 @@ const crearProducto = async (req, res) => {
 
 
 
-exports.obtenerProductos=obtenerProductos;
+exports.obtenerProductos = obtenerProductos;
 
 
-exports.crearProducto=crearProducto;
+exports.crearProducto = crearProducto;

@@ -8,7 +8,7 @@ const mysqlConnection = require('../database.js');
 
 const loginUsuario = async (req, res) => {
   const { username, password } = req.body;
-  mysqlConnection.query('SELECT user.id, user.emisor_id, user.rol_id,user.username,user.password,user.email,user.nombre,user.apellidos,user.salt,user.is_active,emisor.ruc,emisor.razonSocial,emisor.nombreComercial,emisor.direccionMatriz from user  INNER JOIN role on user.emisor_id = role.id INNER JOIN emisor on user.emisor_id = emisor.id where username=?', username.trim(), (err, rows, fields) => {
+  mysqlConnection.query('SELECT user.id as userId, user.emisor_id, user.rol_id,user.username,user.password,user.email,user.nombre,user.apellidos, user.salt,user.is_active as userActivo,emisor.ruc,emisor.razonSocial,emisor.nombreComercial,emisor.direccionMatriz, establecimiento.id as idEstablecimiento,establecimiento.codigo as codigoEstablecimiento,establecimiento.activo as establecimientoActivo from user   INNER JOIN role on user.emisor_id = role.id  INNER JOIN emisor on user.emisor_id = emisor.id INNER JOIN establecimiento on user.emisor_id = establecimiento.emisor_id where username=?', username.trim(), (err, rows, fields) => {
     if (!err) {
       try {
         if (encryptPassword(password.trim(), rows[0].salt) == rows[0].password) {
@@ -17,7 +17,7 @@ const loginUsuario = async (req, res) => {
           estado = 200;
           mensaje = 'Usuario logeado con éxito';
           autorizacion = token;
-          usuarios = rows[0];
+          data = rows[0];
           res.status(estado).json(obtenerJsonRespuesta(mensaje, autorizacion, data));
         } else {
           estado = 401; mensaje = 'El password no coincide con el del usuario ' + rows[0].username; autorizacion = token; usuarios = "";
@@ -39,14 +39,10 @@ const loginUsuario = async (req, res) => {
       estado = 404;
       mensaje = 'No se pudo conectar a la BDD';
       autorizacion = "";
-      usuarios = "";
-      res.status(estado).json({
-        message: mensaje,
-        body: {
-          autorizacion: autorizacion,
-          usuarios: usuarios
-        }
-      })
+      data = "";
+      res.status(estado).json(obtenerJsonRespuesta(mensaje, autorizacion, data));
+
+      
     }
   });
 
@@ -75,7 +71,7 @@ function obtenerJsonRespuesta(message, autorizacion, data) {
     message: mensaje,
     body: {
       autorizacion: autorizacion,
-      usuarios: usuarios
+      data
     }
   }
   return jsonRespuesta;
