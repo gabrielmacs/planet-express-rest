@@ -4,6 +4,8 @@ const rutasUsuario=require('../controllers/usuario')
 const rutasProducto=require('../controllers/producto')
 const rutasCliente=require('../controllers/cliente')
 const rutasFactura=require('../controllers/factura')
+const rutasPuntosEmision=require('../controllers/puntoEmision')
+
 const verificarToken = require('../authentication/verificarToken');
 
 //Usuario
@@ -16,6 +18,7 @@ router.post('/obtenerClientes',rutasCliente.obtenerClientes);
 router.post('/crearCliente',rutasCliente.crearCliente);
 //factura
 router.post('/crearFactura',rutasFactura.crearFactura);
-
+//punto de emision
+//router.get('/obtenerPtoEmision/:user_id',rutasPuntosEmision.obtenerPtoEmision);
 
 module.exports = router;

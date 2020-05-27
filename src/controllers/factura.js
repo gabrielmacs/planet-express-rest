@@ -1,27 +1,21 @@
 var checkdigit = require('checkdigit');
+const rutasPuntosEmision = require('../controllers/puntoEmision');
 
-const claveAcceso = crearClaveAcceso("16122019", "1792095468001", "1", "001001000000003", "1")
 
 const mysqlConnection = require('../database.js');
 const obtenerJsonRes = require('./respuestaJSON.js');
 
 
-function crearClaveAcceso(fechaEmision, ruc, ambiente, codigoComprobante, tipoEmision) {
-  auxClaveAcceso = fechaEmision + "01" + ruc + ambiente + codigoComprobante + "12345678" + tipoEmision;
+async function crearClaveAcceso(fechaEmision, ruc, ambiente, codigoComprobante, tipoEmision) {
 
+  auxClaveAcceso = fechaEmision + "01" + ruc + ambiente + codigoComprobante + "12345678" + tipoEmision;
   digitoVerificador = checkdigit.mod11.create(auxClaveAcceso);
+
+  console.log(auxClaveAcceso + digitoVerificador)
   return auxClaveAcceso + digitoVerificador
 }
 
-
-
-
-const crearFactura = async (req, res) => {
-  console.log(req.body)
-  createdAt = new Date();
-  updatedAt = new Date();
-  const { cliente_id, emisor_id, establecimiento_id, claveAcceso, estado, ambiente, tipoEmision, secuencial, formaPago, fechaEmision, totalSinImpuestos, subtotal12, subtotal0, subtotalNoIVA, subtotalExentoIVA, valorICE, valorIRBPNR, iva12, totalDescuento, propina, valorTotal, firmado, enviarSiAutorizado, observacion, ptoEmision_id, createdBy_id, updatedBy_id } = req.body;
-  console.log(cliente_id, emisor_id, establecimiento_id, claveAcceso, estado, ambiente, tipoEmision, secuencial, formaPago, fechaEmision, totalSinImpuestos, subtotal12, subtotal0, subtotalNoIVA, subtotalExentoIVA, valorICE, valorIRBPNR, iva12, totalDescuento, propina, valorTotal, firmado, enviarSiAutorizado, observacion, createdAt, updatedAt, ptoEmision_id, createdBy_id, updatedBy_id)
+async function insertarBDD() {
   mysqlConnection.query('INSERT INTO factura (cliente_id,emisor_id,establecimiento_id,claveAcceso,estado,ambiente,tipoEmision,secuencial,formaPago,fechaEmision,totalSinImpuestos,subtotal12,subtotal0,subtotalNoIVA,subtotalExentoIVA,valorICE,valorIRBPNR,iva12,totalDescuento,propina,valorTotal,firmado,enviarSiAutorizado,observacion,createdAt,updatedAt,ptoEmision_id,createdBy_id,updatedBy_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [cliente_id, emisor_id, establecimiento_id, claveAcceso, estado, ambiente, tipoEmision, secuencial, formaPago, fechaEmision, totalSinImpuestos, subtotal12, subtotal0, subtotalNoIVA, subtotalExentoIVA, valorICE, valorIRBPNR, iva12, totalDescuento, propina, valorTotal, firmado, enviarSiAutorizado, observacion, createdAt, updatedAt, ptoEmision_id, createdBy_id, updatedBy_id], (err, rows, fields) => {
 
     if (!err) {
@@ -39,6 +33,30 @@ const crearFactura = async (req, res) => {
       res.status(estadoRes).json(obtenerJsonRes(mensaje, autorizacion, rows));
     }
   });
+}
+
+const crearFactura = async  (req, res) => {
+  try {
+  createdAt = new Date();
+  updatedAt = new Date();
+  
+    const { cliente_id, emisor_id, establecimiento_id, estado, ambiente, tipoEmision, formaPago, fechaEmision, totalSinImpuestos, subtotal12, subtotal0, subtotalNoIVA, subtotalExentoIVA, valorICE, valorIRBPNR, iva12, totalDescuento, propina, valorTotal, firmado, enviarSiAutorizado, observacion, ptoEmision_id, createdBy_id, updatedBy_id, user_id, ruc } = await req.body;
+
+    console.log(updatedAt)
+    const secuencial = await rutasPuntosEmision.obtenerPtoEmision(user_id)
+
+    rutasPuntosEmision.obtenerPtoEmision
+    
+    const claveAcceso = await crearClaveAcceso(fechaEmision, ruc, ambiente, '001' + '001' + secuencial, tipoEmision);
+
+
+
+
+  } catch (e) {
+
+  }
+
+
 
 }
 exports.crearFactura = crearFactura;
