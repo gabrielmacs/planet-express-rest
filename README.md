@@ -1,4 +1,5 @@
-Este es el código de una API REST que trabaja con typescript
+Este es el código de una API REST que trabaja con typescript ya que usa el frameword de angular y tiene creado todo el enrumiento básico de un backed
+
 
 Solo ejecute npm install y el codigo funcionara
 
